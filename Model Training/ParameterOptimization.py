@@ -26,7 +26,7 @@ search_space = {
         'tol': Real(0.1,1)
     },
     'SGDClassifier': {
-        'loss': Categorical(['hinge', 'log', 'modified_huber', 'squared_hinge',
+        'loss': Categorical(['hinge', 'log_loss', 'modified_huber', 'squared_hinge',
         'perceptron']),
         'penalty': Categorical(['l2', 'l1', 'elasticnet']),
         'alpha': Real(0.1,1),
@@ -41,7 +41,7 @@ search_space = {
         'class_weight': Categorical(['balanced', 'balanced_subsample']),
         'criterion': Categorical(['gini', 'entropy']),
         'max_depth': Integer(6, 20),
-        'max_features': Categorical(['auto', 'sqrt','log2']),
+        'max_features': Categorical(['sqrt','log2']),
         'min_samples_leaf': Integer(2,10),
         'min_samples_split': Integer(2,10),
         'n_estimators': Integer(100,500)
@@ -60,7 +60,7 @@ search_space = {
         'alpha': Real(0.1,1),
         'fit_intercept': Categorical([True, False]),
         'tol': Real(0,1),
-        'solver': Categorical(['auto', 'svd', 'cholesky', 
+        'solver': Categorical(['svd', 'cholesky', 
         'lsqr', 'sparse_cg', 'sag', 'saga'])
     },
     'LogisticRegression': {
@@ -73,7 +73,7 @@ search_space = {
         'min_samples_split': Integer(2, 10),
         'min_samples_leaf': Integer(1,10),
         'min_weight_fraction_leaf': Real(0,0.5),
-        'max_features': Categorical(['auto', 'sqrt', 'log2', None]),
+        'max_features': Categorical(['sqrt', 'log2', None]),
         'min_impurity_decrease': Real(0,1)
     },
     'XGBoost' : {
