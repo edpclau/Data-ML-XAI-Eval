@@ -26,6 +26,7 @@ dat <- sim(D,n=i)
 plotDAG(D)
 print(summary(dat))
 mutinformation(dat[c(2,3,4,5,6)])
+
 hc1 = 0.8
 gt[paste0('2_vars_corr_1HC_n',i,'.csv')] = t(as.data.frame(tibble::tibble(C1 = 0.9*hc1, C2 = 0.6*hc1, C3 = 0.4, Noise = 0)))
 # write.csv(dat[-1], paste0('2_vars_corr_1HC_n',i,'.csv'), row.names = FALSE)
@@ -44,7 +45,7 @@ plotDAG(D)
 print(summary(dat))
 mutinformation(dat[c(2,3,4,5,6)])
 hc1 = 0.8
-gt[paste0('1_vars_corr_1HC_n',i,'.csv')] = t(as.data.frame(tibble::tibble(C1 = 0.9*hc1, C2 = 0.6*hc1, C3 = 0.4, Noise = 0)))
+gt[paste0('1_vars_corr_1HC_n',i,'.csv')] = t(as.data.frame(tibble::tibble(C1 = 0.9*hc1, C2 = 0.6, C3 = 0.4, Noise = 0)))
 # write.csv(dat[-1], paste0('1_vars_corr_1HC_n',i,'.csv'), row.names = FALSE)
 
 #3 vars mutual information, 1 hidden confounder
@@ -61,7 +62,7 @@ plotDAG(D)
 print(summary(dat))
 mutinformation(dat[c(2,3,4,5,6)])
 hc1 = 0.8
-gt[paste0('3_vars_corr_1HC_n',i,'.csv')] = t(as.data.frame(tibble::tibble(C1 = 0.9*hc1, C2 = 0.6*hc1, C3 = 0.4, Noise = 0)))
+gt[paste0('3_vars_corr_1HC_n',i,'.csv')] = t(as.data.frame(tibble::tibble(C1 = 0.9*hc1, C2 = 0.6*hc1, C3 = 0.4*hc1, Noise = 0)))
 # write.csv(dat[-1], paste0('3_vars_corr_1HC_n',i,'.csv'), row.names = FALSE)
 
 

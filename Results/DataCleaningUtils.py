@@ -16,7 +16,7 @@ def get_kendall(values, groundnp):
         vals = values[3]
         # vals[:, 3, :] = np.nan_to_num(vals[:, 3, :], nan = 0)
         #vals dimensions (repeats, features, samples)
-        # vals = rankdata(vals, axis = 1)
+        vals = rankdata(vals, axis = 1)
 
         try:
                 corr = np.array([kendalltau(groundnp, vals[:,:,i][0])[0] for i in range(vals.shape[2])])
@@ -63,13 +63,11 @@ def similarity_score(results):
 
 #ROAD score function
 def road_score(results):
-        results = np.dstack([results[0:3]])
+        results = np.dstack([results[0:2]])
         auc = np.trapz(results, axis = 2)
         #0 = Top, 1 = Bottom, 2  = Random
-        results = np.where(auc[2] >= auc[0],  (auc[2] - auc[0])/auc[2], (auc[2] - auc[0])/auc[0])
-        mean = results
-        sd = results
-        return np.array([mean, sd])
+        results = (auc[1] - auc[0])
+        return auc[0]
 
 
 def road_score_alt1(results):
@@ -284,7 +282,7 @@ def clean_road_results(models, explainers, datasets, repeats, ground, dir_path):
                                 evals = [top_, bottom_, rand_, shap_values_]
                                 
                                 #Get the score for a particular file, model, and explainer
-                                _score_[xai] = road_score_alt1(evals)
+                                _score_[xai] = road_score(evals)
                                 _score_bottom_[xai] = get_score_bottom(evals)
                                 _score_top_[xai] = get_score_top(evals)
                                 _similarity_[xai] = similarity_score(evals)
@@ -322,15 +320,16 @@ def clean_road_results(models, explainers, datasets, repeats, ground, dir_path):
         return score, score_bottom, score_top, similarity, kendall, random, noise
 
 # Turn the results into a dataframe
-def results_to_dataframes(score, score_bottom, score_top, similarity, kendall, random, noise):
-                ## Make a Data Frame of ROAR Score
+def results_to_dataframes(score, score_bottom, score_top, similarity, kendall, random, noise, metric = 0):
+
+        ## Make a Data Frame of ROAR Score
         df_score_mean = {}
         for file, models in score.items():
                 df_models = {}
                 for model, exp in models.items():
                         df_exp = {}
                         for explainer, roar_results in exp.items():   
-                                df_exp[explainer] = pd.Series(roar_results[3])
+                                df_exp[explainer] = pd.Series(roar_results[metric])
                         df_models[model] = pd.concat(df_exp)
                 df_score_mean[file] = pd.DataFrame(df_models)
         df_score_mean = pd.concat(df_score_mean)
@@ -342,7 +341,7 @@ def results_to_dataframes(score, score_bottom, score_top, similarity, kendall, r
                 for model, exp in models.items():
                         df_exp = {}
                         for explainer, roar_results in exp.items():   
-                                df_exp[explainer] = pd.Series(roar_results[3])
+                                df_exp[explainer] = pd.Series(roar_results[metric])
                         df_models[model] = pd.concat(df_exp)
                 df_score_bottom_mean[file] = pd.DataFrame(df_models)
         df_score_bottom_mean = pd.concat(df_score_bottom_mean)
@@ -354,7 +353,7 @@ def results_to_dataframes(score, score_bottom, score_top, similarity, kendall, r
                 for model, exp in models.items():
                         df_exp = {}
                         for explainer, roar_results in exp.items():   
-                                df_exp[explainer] = pd.Series(roar_results[3])
+                                df_exp[explainer] = pd.Series(roar_results[metric])
                         df_models[model] = pd.concat(df_exp)
                 df_score_top_mean[file] = pd.DataFrame(df_models)
         df_score_top_mean = pd.concat(df_score_top_mean)
@@ -407,7 +406,7 @@ def results_to_dataframes(score, score_bottom, score_top, similarity, kendall, r
                 for model, exp in models.items():
                         df_exp = {}
                         for explainer, roar_results in exp.items():
-                                df_exp[explainer] = pd.Series(roar_results[3])
+                                df_exp[explainer] = pd.Series(roar_results[metric])
                         df_models[model] = pd.concat(df_exp)
                 df[file] = pd.DataFrame(df_models)
         df_random = pd.concat(df)
